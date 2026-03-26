@@ -1,0 +1,11 @@
+{
+  "name": "memoriant-eval-sandbox-skill",
+  "description": "Scenario-driven AI agent evaluation: Doer/Judge/Adversary/Observer multi-role simulations, probabilistic satisfaction scoring, append-only JSONL audit trails with integrity hashes, and holdout evaluation methodology.",
+  "version": "1.0.0",
+  "skills": [
+    {
+      "name": "eval-sandbox",
+      "path": "skills/eval-sandbox/SKILL.md"
+    }
+  ]
+}

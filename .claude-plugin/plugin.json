@@ -1,0 +1,15 @@
+{
+  "name": "memoriant-eval-sandbox-skill",
+  "version": "1.0.0",
+  "description": "Scenario-driven AI agent evaluation: Doer/Judge/Adversary/Observer multi-role simulations, probabilistic satisfaction scoring, append-only JSONL audit trails with integrity hashes, and holdout evaluation methodology. 1 skill + 1 specialized agent.",
+  "author": {
+    "name": "Nathan Maine",
+    "url": "https://github.com/NathanMaine"
+  },
+  "homepage": "https://github.com/NathanMaine/agentic-evaluation-sandbox",
+  "repository": "https://github.com/NathanMaine/memoriant-eval-sandbox-skill",
+  "license": "MIT",
+  "keywords": ["evaluation", "agent-testing", "red-team", "compliance", "audit", "doer-judge", "adversarial", "scenario", "regression"],
+  "skills": "./skills/",
+  "agents": "./agents/"
+}
