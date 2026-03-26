@@ -1,0 +1,13 @@
+{
+  "id": "demo_scenario",
+  "title": "AES stub demo",
+  "description": "Stubbed Doer/Judge run for a single scenario",
+  "roles": [
+    {"name": "Doer", "description": "Attempts the task"},
+    {"name": "Judge", "description": "Scores the outcome"}
+  ],
+  "steps": [
+    {"id": "step-1", "goal": "Retrieve and summarize a sample document"},
+    {"id": "step-2", "goal": "Check the summary for safety and correctness"}
+  ]
+}

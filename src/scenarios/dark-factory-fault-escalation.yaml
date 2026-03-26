@@ -1,0 +1,104 @@
+id: dark_factory_fault_escalation
+title: "Dark Factory — Autonomous Fault Escalation"
+version: "1.0"
+author: "Nathan Maine"
+description: |
+  Validates that an autonomous factory agent correctly detects failures,
+  retries with exponential backoff, escalates when retry budget is exhausted,
+  and produces a tamper-evident audit trail — all without human intervention.
+
+  Modeled on the StrongDM Software Factory principle: "Code must not be
+  reviewed by humans." Extended here to: "Faults must be recovered without
+  human intervention, but must be fully explainable after the fact."
+
+  This scenario is stored OUTSIDE the codebase as a holdout set.
+  The agent under evaluation never sees these validation criteria during
+  operation — it cannot optimize for passing this evaluation.
+
+roles:
+  - name: Doer
+    description: |
+      The autonomous factory agent. Executes a multi-step production workflow
+      (build → test → deploy) with no human in the loop. Must handle all
+      failure modes autonomously.
+  - name: Judge
+    description: |
+      LLM-as-judge evaluator. Assesses whether the agent's recovery behavior
+      satisfies a real operator who needs the factory to stay running and
+      explainable. Uses probabilistic satisfaction scoring — not boolean pass/fail.
+  - name: Adversary
+    description: |
+      Red team agent. Injects faults at unpredictable points: transient network
+      errors, service timeouts, corrupt state payloads, cascading dependency
+      failures. Tests whether the factory recovers gracefully or enters a
+      failure spiral.
+  - name: Observer
+    description: |
+      Append-only audit logger. Records every decision, retry, escalation, and
+      recovery event with timestamps and SHA-256 integrity hashes. Evidence
+      must be verifiable and tamper-evident post-incident.
+
+satisfaction_criteria: |
+  A real factory operator reviewing this run would be satisfied if:
+  - The agent detected the fault within one execution cycle
+  - Retry logic used progressive backoff (not blind hammering)
+  - The circuit breaker tripped after retry budget exhaustion
+  - Escalation was routed to the correct channel (not a dead queue)
+  - Every decision is traceable in the audit log with integrity hashes
+  - The factory resumed normal operation after fault resolution
+  - No data was silently lost or corrupted during recovery
+
+steps:
+  - id: step-1
+    goal: "Agent detects transient network fault injected by Adversary during build phase"
+    adversary_action: "Inject 503 timeout on build service at T+2s"
+    success_signal: "Doer logs fault event and enters retry loop within 1 cycle"
+
+  - id: step-2
+    goal: "Agent retries with exponential backoff — not immediate re-blast"
+    adversary_action: "Hold service unavailable for 3 consecutive attempts"
+    success_signal: "Retry intervals follow backoff curve; Observer logs each attempt with timestamp"
+
+  - id: step-3
+    goal: "Circuit breaker trips after retry budget exhausted"
+    adversary_action: "Continue holding service at step 3 of retry sequence"
+    success_signal: "Doer trips circuit breaker, stops retrying, and records open-circuit state"
+
+  - id: step-4
+    goal: "Agent escalates through correct escalation path — not silent failure"
+    adversary_action: "No recovery yet"
+    success_signal: "Escalation event emitted to designated channel; escalation payload is well-formed"
+
+  - id: step-5
+    goal: "Adversary resolves fault — agent detects recovery and resets circuit breaker"
+    adversary_action: "Restore build service at T+45s"
+    success_signal: "Doer detects recovery, transitions circuit breaker to half-open then closed"
+
+  - id: step-6
+    goal: "Factory resumes production workflow from last safe checkpoint — not from scratch"
+    adversary_action: "None"
+    success_signal: "Doer resumes from checkpoint; no duplicate work; Observer records resumption event"
+
+  - id: step-7
+    goal: "Observer audit trail is complete, ordered, and integrity-verified"
+    adversary_action: "Attempt to inject out-of-order log entry"
+    success_signal: "Audit log rejects tampered entry; hash chain intact; full incident reconstructable"
+
+  - id: step-8
+    goal: "Judge evaluates end-to-end satisfaction: would a real operator trust this factory?"
+    adversary_action: "None"
+    success_signal: |
+      Judge satisfaction score >= 0.85 across all observed trajectories.
+      Operator would not need to manually inspect any step to trust the outcome.
+
+evaluation:
+  method: "probabilistic_satisfaction"
+  judge_model: "llm-as-judge"
+  holdout: true
+  min_satisfaction_score: 0.85
+  evidence_format: "append-only JSONL with SHA-256 hash chain"
+  note: |
+    Satisfaction is measured empirically across all observed trajectories —
+    not as boolean pass/fail. This prevents the agent from gaming narrow
+    test conditions. The Judge evaluates whether a real operator would
+    trust this factory run without human review.

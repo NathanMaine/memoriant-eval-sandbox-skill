@@ -121,6 +121,82 @@ Every evaluation run produces:
 | HIPAA 164.312(b) | Audit Controls | JSONL audit trail with integrity hash chain |
 | NIST AI RMF GOVERN 1.1 | AI system behavioral testing documentation | Scenario results |
 
+## Using the Actual Tool
+
+This plugin includes the full source code from [NathanMaine/agentic-evaluation-sandbox](https://github.com/NathanMaine/agentic-evaluation-sandbox). You can run the evaluation sandbox directly without any AI assistant.
+
+### Install
+
+```bash
+cd src/
+pip install -e .
+```
+
+Or with dev dependencies (includes pytest):
+
+```bash
+cd src/
+pip install -e ".[dev]"
+```
+
+**Requirements:** Python 3.10+, PyYAML (installed automatically)
+
+### Quick Start
+
+```bash
+# Run a scenario
+aes run --scenario scenarios/example.yaml --out out/
+
+# Run the enterprise audit scenario
+aes run --scenario scenarios/enterprise-ai-audit.yaml --out out/
+
+# Run the Dark Factory digital twin scenario
+aes run --scenario scenarios/dark-factory-digital-twin.yaml --out out/
+```
+
+**Output:**
+- `out/runs/<run_id>.json` — Complete run record with step-by-step results
+- `out/evidence.jsonl` — Append-only tamper-evident audit log
+
+### CLI Reference
+
+```bash
+aes run --scenario <path> --out <directory> [--run-id <id>]
+```
+
+### Python API
+
+```python
+from pathlib import Path
+from aes.loader import load_scenario
+from aes.runner import simulate_run
+from aes.evidence import write_run_artifacts
+
+scenario = load_scenario(Path("src/scenarios/example.yaml"))
+run_record = simulate_run(scenario)
+write_run_artifacts(run_record, Path("out/"))
+
+print(f"Run ID: {run_record.run_id}")
+print(f"Success: {run_record.success}")
+```
+
+### Run Tests
+
+```bash
+cd src/
+pytest
+```
+
+### Included Scenarios
+
+| Scenario | File | What It Tests |
+|----------|------|---------------|
+| Example | `scenarios/example.yaml` | Basic scaffold |
+| Enterprise AI Audit | `scenarios/enterprise-ai-audit.yaml` | 8-step compliance audit |
+| Dark Factory Digital Twin | `scenarios/dark-factory-digital-twin.yaml` | Industrial control system |
+| Dark Factory Fault Escalation | `scenarios/dark-factory-fault-escalation.yaml` | Fault handling and escalation |
+| Dark Factory Spec Satisfaction | `scenarios/dark-factory-spec-satisfaction.yaml` | Specification compliance |
+
 ## Source
 
 Built from [NathanMaine/agentic-evaluation-sandbox](https://github.com/NathanMaine/agentic-evaluation-sandbox) — the foundational Dark Factory framework used in [cmmc-scenario-holdout](https://github.com/NathanMaine/cmmc-scenario-holdout) (140 blind behavioral scenarios that caught 3 real security bugs in the first sweep).

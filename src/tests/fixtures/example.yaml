@@ -1,0 +1,12 @@
+{
+  "id": "test_scenario",
+  "title": "Test stub",
+  "description": "Fixture scenario for CLI test",
+  "roles": [
+    {"name": "Doer"},
+    {"name": "Judge"}
+  ],
+  "steps": [
+    {"id": "step-1", "goal": "Do the thing"}
+  ]
+}
