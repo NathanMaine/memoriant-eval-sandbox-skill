@@ -1,16 +1,6 @@
 ---
 name: eval-sandbox
 description: Design and run structured AI agent evaluations. Define scenarios with Doer/Judge/Adversary/Observer roles, score satisfaction probabilistically, generate append-only JSONL audit trails with integrity hashes, and apply holdout evaluation methodology.
-version: 1.0.0
-author: Nathan Maine
-triggers:
-  - /eval-sandbox
-  - "evaluate this agent"
-  - "run agent evaluation"
-  - "design evaluation scenario"
-  - "red team agent"
-  - "agent compliance test"
-  - "behavioral regression test"
 ---
 
 # Agentic Evaluation Sandbox Skill
